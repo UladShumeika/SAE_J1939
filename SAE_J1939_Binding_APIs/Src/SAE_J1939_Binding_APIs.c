@@ -30,6 +30,21 @@ static J1939_states J1939_state = J1939_STATE_UNINIT;
 //---------------------------------------------------------------------------
 
 /**
+ * @brief 	This function is used to processing J1939 messages.
+ * @param 	rxMessage - A pointer to the receiving message's data.
+ * @retval	None.
+ */
+void J1939_messagesProcessing(USH_CAN_rxHeaderTypeDef* rxMessage)
+{
+	uint8_t pages = (uint8_t)(rxMessage->ExtId >> 24U) & J1939_PRIORITY_MASK;
+	uint8_t pduFormat = (uint8_t)(rxMessage->ExtId >> 16U);
+	uint8_t destinAddress = (uint8_t)(rxMessage->ExtId >> 8U);
+	uint8_t sourceAddress = (uint8_t)rxMessage->ExtId;
+
+	uint8_t data[] = "Hello, my name is Ulad!";
+}
+
+/**
  * @brief	This function is used to switch between SAE J1939 protocol operation
  * 			states
  * @retval 	None.

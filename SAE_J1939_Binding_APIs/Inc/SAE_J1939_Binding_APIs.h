@@ -40,6 +40,13 @@ typedef enum
 //---------------------------------------------------------------------------
 
 /**
+ * @brief 	This function is used to processing J1939 messages.
+ * @param 	rxMessage - A pointer to the receiving message's data.
+ * @retval	None.
+ */
+void J1939_messagesProcessing(USH_CAN_rxHeaderTypeDef* rxMessage);
+
+/**
  * @brief	This function is used to switch between SAE J1939 protocol operation
  * 			states
  * @retval 	None.

@@ -16,6 +16,11 @@
 #define __SAE_J1939_BINDING_APIS_H
 
 //---------------------------------------------------------------------------
+// Includes
+//---------------------------------------------------------------------------
+#include "stm32f4xx.h"
+
+//---------------------------------------------------------------------------
 // Structures and enumerations
 //---------------------------------------------------------------------------
 
@@ -34,7 +39,6 @@ typedef enum
 // External function prototypes
 //---------------------------------------------------------------------------
 
-
 /**
  * @brief 	This function is used to get J1939 state.
  * @retval	J1939 state.
@@ -47,5 +51,11 @@ J1939_states J1939_getState(void);
  * @retval	None.
  */
 void J1939_setState(J1939_states state);
+
+/**
+ * @brief	This function is used to configuration CAN bus.
+ * @retval	None.
+ */
+__WEAK void J1939_initCAN(void);
 
 #endif /* __SAE_J1939_BINDING_APIS_H */

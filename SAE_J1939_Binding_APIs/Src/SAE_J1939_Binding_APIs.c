@@ -42,3 +42,12 @@ void J1939_setState(J1939_states state)
 {
 	J1939_state = state;
 }
+
+/**
+ * @brief	This function is used to configuration CAN bus.
+ * @retval	None.
+ */
+__WEAK void J1939_initCAN(void)
+{
+
+}

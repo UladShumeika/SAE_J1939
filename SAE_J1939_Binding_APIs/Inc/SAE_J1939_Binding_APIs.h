@@ -40,6 +40,13 @@ typedef enum
 //---------------------------------------------------------------------------
 
 /**
+ * @brief	This function is used to switch between SAE J1939 protocol operation
+ * 			states
+ * @retval 	None.
+ */
+void J1939_stateMachine(void);
+
+/**
  * @brief 	This function is used to get J1939 state.
  * @retval	J1939 state.
  */

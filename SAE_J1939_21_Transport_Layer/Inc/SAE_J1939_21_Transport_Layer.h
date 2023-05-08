@@ -21,6 +21,11 @@
 #include "stm32f4xx.h"
 
 //---------------------------------------------------------------------------
+// Defines
+//---------------------------------------------------------------------------
+#define MAX_DT_SIZE					(1785U)
+
+//---------------------------------------------------------------------------
 // Structures and enumerations
 //---------------------------------------------------------------------------
 
@@ -57,5 +62,17 @@ typedef enum
 	J1939_CONTROL_BYTE_TP_CM_BAM			= 32U,
 	J1939_CONTROL_BYTE_TP_CM_Abort			= 255U
 } J1939_controlBytes;
+
+/**
+ * @brief SAE J1939 abort reasons enumeration.
+ */
+typedef enum
+{
+	J1939_REASON_BUSY		= 1,		/* Already in one or more connection managed sessions and
+								   	   	   cannot support another */
+
+	J1939_REASON_TIMEOUT 	= 3, 		/* A timeout occurred, and this is the connection abort
+										   to close the session. */
+} J1939_abortReasons;
 
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

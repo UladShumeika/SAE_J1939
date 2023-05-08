@@ -32,16 +32,26 @@ static J1939_states J1939_state = J1939_STATE_UNINIT;
 /**
  * @brief 	This function is used to processing J1939 messages.
  * @param 	rxMessage - A pointer to the receiving message's data.
+ * @param	data - A pointer to the receiving data.
  * @retval	None.
  */
-void J1939_messagesProcessing(USH_CAN_rxHeaderTypeDef* rxMessage)
+void J1939_messagesProcessing(USH_CAN_rxHeaderTypeDef* rxMessage, uint8_t* data)
 {
-	uint8_t pages = (uint8_t)(rxMessage->ExtId >> 24U) & J1939_PRIORITY_MASK;
+	//uint8_t pages = (uint8_t)(rxMessage->ExtId >> 24U) & J1939_PRIORITY_MASK;
 	uint8_t pduFormat = (uint8_t)(rxMessage->ExtId >> 16U);
 	uint8_t destinAddress = (uint8_t)(rxMessage->ExtId >> 8U);
 	uint8_t sourceAddress = (uint8_t)rxMessage->ExtId;
 
-	uint8_t data[] = "Hello, my name is Ulad!";
+	if(J1939_state != J1939_STATE_UNINIT)
+	{
+		if(pduFormat == 0xEA)
+		{
+			J1939_readTP_connectionManagement(data);
+		} else if(((pduFormat == 0xEB) && ((J1939_state == J1939_STATE_TP_RECEIVING_BROADCAST) || (J1939_STATE_TP_RECEIVING_PEER_TO_PEER))))
+		{
+			J1939_readTP_dataTransfer(data);
+		}
+	}
 }
 
 /**

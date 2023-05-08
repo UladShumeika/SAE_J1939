@@ -19,6 +19,7 @@
 // Includes
 //---------------------------------------------------------------------------
 #include "stm32f4xx.h"
+#include "SAE_J1939_21_Transport_Layer.h"
 
 //---------------------------------------------------------------------------
 // Structures and enumerations
@@ -44,9 +45,10 @@ typedef enum
 /**
  * @brief 	This function is used to processing J1939 messages.
  * @param 	rxMessage - A pointer to the receiving message's data.
+ * @param	data - A pointer to the receiving data.
  * @retval	None.
  */
-void J1939_messagesProcessing(USH_CAN_rxHeaderTypeDef* rxMessage);
+void J1939_messagesProcessing(USH_CAN_rxHeaderTypeDef* rxMessage, uint8_t* data);
 
 /**
  * @brief	This function is used to switch between SAE J1939 protocol operation

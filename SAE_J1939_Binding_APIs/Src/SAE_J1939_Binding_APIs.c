@@ -55,15 +55,16 @@ void J1939_stateMachine(void)
 	{
 		case J1939_STATE_UNINIT:
 			J1939_initCAN();
+			J1939_state = J1939_STATE_NORMAL;
 			break;
 
 		case J1939_STATE_NORMAL:
 			break;
 
-		case J1939_STATE_TP_RECEIVE:
+		case J1939_STATE_TP_RECEIVING_BROADCAST:
 			break;
 
-		case J1939_STATE_TP_TRANSMITE:
+		case J1939_STATE_TP_SENDING_BROADCAST:
 			break;
 
 		default:

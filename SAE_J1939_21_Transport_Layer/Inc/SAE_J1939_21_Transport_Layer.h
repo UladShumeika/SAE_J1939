@@ -46,12 +46,16 @@ typedef struct
 	uint8_t flag_wait_message;		/* A flag of waiting message */
 } J1939_TP_DT;
 
+/**
+ * @brief SAE J1939 control bytes enumeration.
+ */
 typedef enum
 {
-	CB_TP_CM_RTS 				= 16U,
-	CB_TP_CM_CTS 				= 17U,
-	CB_TP_CM_END_OF_MSG_ACK 	= 19U,
-	CB_TP_CONN_ABORT 			= 255U
+	J1939_CONTROL_BYTE_TP_CM_RTS			= 16U,
+	J1939_CONTROL_BYTE_TP_CM_CTS			= 17U,
+	J1939_CONTROL_BYTE_TP_CM_EndOfMsgACK	= 19U,
+	J1939_CONTROL_BYTE_TP_CM_BAM			= 32U,
+	J1939_CONTROL_BYTE_TP_CM_Abort			= 255U
 } J1939_controlBytes;
 
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

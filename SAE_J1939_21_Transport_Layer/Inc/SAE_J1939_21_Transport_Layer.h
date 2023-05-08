@@ -75,4 +75,15 @@ typedef enum
 										   to close the session. */
 } J1939_abortReasons;
 
+//---------------------------------------------------------------------------
+// External function prototypes
+//---------------------------------------------------------------------------
+
+/**
+ * @brief 	This function is used to read transport protocol connection management messages.
+ * @param	data - A pointer to the receiving data.
+ * @retval	None.
+ */
+void J1939_readTP_connectionManagement(uint8_t* data);
+
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

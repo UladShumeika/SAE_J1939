@@ -16,6 +16,7 @@
 #include "SAE_J1939_21_Transport_Layer.h"
 #include "SAE_J1939_Binding_APIs.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 //---------------------------------------------------------------------------
 // Structure definitions
@@ -55,5 +56,29 @@ void J1939_readTP_connectionManagement(uint8_t* data)
 	{
 		dataTransfer.flag_wait_message = true;
 		J1939_setState(J1939_STATE_TP_RECEIVING_BROADCAST);
+	}
+}
+
+/**
+ * @brief 	This function is used to read transport protocol data transfer messages.
+ * @param	data - A pointer to the receiving data.
+ * @retval	None.
+ */
+void J1939_readTP_dataTransfer(uint8_t* data)
+{
+	uint8_t index = data[0] - 1;
+
+	dataTransfer.sequence_number = data[0];
+
+	for(uint8_t i = 1; i <= 7; i++)
+	{
+		dataTransfer.data[(index * 7) + (i - 1)] = data[i];
+	}
+
+	dataTransfer.flag_wait_message = false;
+
+	if(connectManagement.total_number_of_packages == dataTransfer.sequence_number)
+	{
+		J1939_setState(J1939_STATE_NORMAL);
 	}
 }

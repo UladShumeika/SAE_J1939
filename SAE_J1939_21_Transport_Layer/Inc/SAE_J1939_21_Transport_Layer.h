@@ -75,6 +75,17 @@ typedef enum
 										   to close the session. */
 } J1939_abortReasons;
 
+/**
+ * @brief J1939 status enumeration.
+ */
+typedef enum
+{
+	J1939_STATUS_OK				= 0,
+	J1939_STATUS_ERROR,
+	J1939_STATUS_DATA_FINISHED,
+	J1939_STATUS_DATA_CONTINUE
+} J1939_status;
+
 //---------------------------------------------------------------------------
 // External function prototypes
 //---------------------------------------------------------------------------

@@ -32,4 +32,15 @@ typedef struct
 	uint8_t ECUaddress;
 } J1939_informationECU;
 
+//---------------------------------------------------------------------------
+// External function prototypes
+//---------------------------------------------------------------------------
+
+/**
+ * @brief 	This function is used to get the current ECU address.
+ * @param	data - A pointer to the receiving data.
+ * @retval	J1939 status.
+ */
+uint8_t J1939_getCurrentECUAddress(void);
+
 #endif /* __SAE_J1939_21_NETWORK_MANAGEMENT_LAYER_H */

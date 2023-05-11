@@ -19,3 +19,17 @@
 // Structure definitions
 //---------------------------------------------------------------------------
 static J1939_informationECU currentECU = {0};
+
+//---------------------------------------------------------------------------
+// Library Functions
+//---------------------------------------------------------------------------
+
+/**
+ * @brief 	This function is used to get the current ECU address.
+ * @param	data - A pointer to the receiving data.
+ * @retval	J1939 status.
+ */
+uint8_t J1939_getCurrentECUAddress(void)
+{
+	return currentECU.ECUaddress;
+}

@@ -75,12 +75,14 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data)
 /**
  * @brief 	This function is used to read transport protocol data transfer messages.
  * @param	data - A pointer to the receiving data.
- * @retval	None.
+ * @retval	J1939 status.
  */
-void J1939_readTP_dataTransfer(uint8_t* data)
+J1939_status J1939_readTP_dataTransfer(uint8_t* data)
 {
+	J1939_status status = J1939_STATUS_DATA_CONTINUE;
 	uint8_t index = data[0] - 1;
 
+	// Read the multi-packet message
 	dataTransfer.sequence_number = data[0];
 
 	for(uint8_t i = 1; i <= 7; i++)
@@ -88,10 +90,11 @@ void J1939_readTP_dataTransfer(uint8_t* data)
 		dataTransfer.data[(index * 7) + (i - 1)] = data[i];
 	}
 
-	//dataTransfer.flag_wait_message = false;
-
+	// Check the last package
 	if(connectManagement.total_number_of_packages == dataTransfer.sequence_number)
 	{
-		//J1939_setState(J1939_STATE_NORMAL);
+		status = J1939_STATUS_DATA_FINISHED;
 	}
+
+	return status;
 }

@@ -100,8 +100,8 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data);
 /**
  * @brief 	This function is used to read transport protocol data transfer messages.
  * @param	data - A pointer to the receiving data.
- * @retval	None.
+ * @retval	J1939 status.
  */
-void J1939_sendTP_connectionAbort(J1939_abortReasons reason);
+J1939_status J1939_readTP_dataTransfer(uint8_t* data);
 
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

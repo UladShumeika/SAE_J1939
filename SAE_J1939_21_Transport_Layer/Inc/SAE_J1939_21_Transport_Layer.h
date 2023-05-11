@@ -35,7 +35,7 @@
 typedef struct
 {
 	uint8_t control_byte;							/* Type of messages	*/
-	uint16_t message_size;							/* Total bytes of sending message - 9 to 1785 */
+	uint16_t message_size;							/* Total bytes of sending message - 9 to MAX_DT_SIZE */
 	uint8_t total_number_of_packages;				/* Number of packages to send a message */
 	uint32_t PGN_of_the_multipacket_message;		/* A PGN that activated the multi-packet transfer */
 } J1939_TP_CM;
@@ -93,15 +93,15 @@ typedef enum
 /**
  * @brief 	This function is used to read transport protocol connection management messages.
  * @param	data - A pointer to the receiving data.
- * @retval	None.
+ * @retval	J1939 status.
  */
-void J1939_readTP_connectionManagement(uint8_t* data);
+J1939_status J1939_readTP_connectionManagement(uint8_t* data);
 
 /**
  * @brief 	This function is used to read transport protocol data transfer messages.
  * @param	data - A pointer to the receiving data.
  * @retval	None.
  */
-void J1939_readTP_dataTransfer(uint8_t* data);
+void J1939_sendTP_connectionAbort(J1939_abortReasons reason);
 
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

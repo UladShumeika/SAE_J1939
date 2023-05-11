@@ -20,4 +20,16 @@
 //---------------------------------------------------------------------------
 #include "stm32f4xx.h"
 
+//---------------------------------------------------------------------------
+// Structures and enumerations
+//---------------------------------------------------------------------------
+
+/**
+ * @brief SAE J1939 the current ECU information.
+ */
+typedef struct
+{
+	uint8_t ECUaddress;
+} J1939_informationECU;
+
 #endif /* __SAE_J1939_21_NETWORK_MANAGEMENT_LAYER_H */

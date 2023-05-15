@@ -84,7 +84,7 @@ typedef struct
 	uint8_t sequence_number;		/* Sequence number - 1 to 255 */
 	uint8_t* data;					/* A pointer to data */
 	uint16_t data_size;				/* From 9 to MAX_DT_SIZE */
-	uint8_t flag_wait_message;		/* A flag of waiting message */
+	uint16_t sent_bytes;			/* A flag of waiting message */
 } J1939_TP_DT;
 
 //---------------------------------------------------------------------------
@@ -113,7 +113,14 @@ void J1939_sendTP_connectionManagement(uint8_t destinationAddress);
 J1939_status J1939_readTP_dataTransfer(uint8_t* data);
 
 /**
- * @brief	This function used to fill connection management structure.
+ * @brief	This function is used to send the data transfer packages.
+ * @param 	destinationAddress - A destination address(255 for broadcast).
+ * @return	J1939 status.
+ */
+J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress);
+
+/**
+ * @brief	This function used to fill TP structures.
  * @param 	data - A pointer to the sending data.
  * @param 	dataSize - A size of the sending data.
  * @param 	PGN - A PGN of the multipacket message.

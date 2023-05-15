@@ -163,7 +163,46 @@ J1939_status J1939_readTP_dataTransfer(uint8_t* data)
 }
 
 /**
- * @brief	This function used to fill connection management structure.
+ * @brief	This function is used to send the data transfer packages.
+ * @param 	destinationAddress - A destination address(255 for broadcast).
+ * @return	J1939 status.
+ */
+J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress)
+{
+	J1939_status status = J1939_STATUS_DATA_CONTINUE;
+	USH_CAN_txHeaderTypeDef txMessage = {0};
+	uint8_t currentECUAddress = J1939_getCurrentECUAddress();
+	uint8_t data[8] = {0};
+
+	// Build CAN ID FRAME, where 7 is the default priority
+	txMessage.ExtId		= (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | J1939_EDP_0 | J1939_DP_0 | \
+		      	  	  	   (J1939_DATA_TRANSFER << J1939_PDU_FORMAT_POS) | \
+						   (destinationAddress << J1939_PDU_SPECIFIC_POS) | \
+						   currentECUAddress);
+	txMessage.IDE		= CAN_ID_EXT;
+	txMessage.RTR		= CAN_RTR_DATA;
+	txMessage.DLC		= 8U;
+
+	// Fill the data field of the sending message
+	data[0] = ++dataTransfer.sequence_number;
+
+	for(uint8_t i = 1; i <= J1939_MAX_LENGTH_TP_MODE_PACKAGE; i++)
+	{
+		(dataTransfer.sent_bytes < dataTransfer.data_size) ? (data[i] = dataTransfer.data[dataTransfer.sent_bytes++]) : \
+																	    (data[i] = 0xFFU);
+	}
+
+	// Send the data package
+	CAN_addTxMessage(CAN_USED, &txMessage, data);
+
+	// Check if the message has been sent
+	if(dataTransfer.sent_bytes >= dataTransfer.data_size) status = J1939_STATUS_DATA_FINISHED;
+
+	return status;
+}
+
+/**
+ * @brief	This function used to fill TP structures.
  * @param 	data - A pointer to the sending data.
  * @param 	dataSize - A size of the sending data.
  * @param 	PGN - A PGN of the multipacket message.

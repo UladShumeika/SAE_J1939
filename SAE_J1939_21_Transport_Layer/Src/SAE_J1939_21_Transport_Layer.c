@@ -179,4 +179,24 @@ void J1939_fillConnectionManagement(uint8_t* data, uint16_t dataSize, uint32_t P
 	connectManagement.total_number_of_packages 			= (remainder > 0U) ? ((dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE) + 1) : \
 																			 (dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE);
 	connectManagement.PGN_of_the_multipacket_message 	= PGN;
+
+}
+
+/**
+ * @brief	This function is used to clean TP structures.
+ * @retval	None.
+ */
+void J1939_cleanTPstructures(void)
+{
+	// Clean the connection management structure
+	connectManagement.control_byte						= 0U;
+	connectManagement.message_size						= 0U;
+	connectManagement.total_number_of_packages			= 0U;
+	connectManagement.PGN_of_the_multipacket_message	= 0U;
+
+	// Clean the data transfer structure
+	dataTransfer.sent_bytes								= 0U;
+	dataTransfer.data									= 0U;
+	dataTransfer.data_size								= 0U;
+	dataTransfer.sequence_number						= 0U;
 }

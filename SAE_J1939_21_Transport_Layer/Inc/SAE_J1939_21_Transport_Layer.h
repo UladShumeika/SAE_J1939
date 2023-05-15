@@ -122,4 +122,10 @@ J1939_status J1939_readTP_dataTransfer(uint8_t* data);
  */
 void J1939_fillConnectionManagement(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte);
 
+/**
+ * @brief	This function is used to clean TP structures.
+ * @retval	None.
+ */
+void J1939_cleanTPstructures(void);
+
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

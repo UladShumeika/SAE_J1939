@@ -26,8 +26,7 @@ static J1939_informationECU currentECU = {0};
 
 /**
  * @brief 	This function is used to get the current ECU address.
- * @param	data - A pointer to the receiving data.
- * @retval	J1939 status.
+ * @retval	ECU address.
  */
 uint8_t J1939_getCurrentECUAddress(void)
 {

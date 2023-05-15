@@ -42,4 +42,11 @@ typedef struct
  */
 uint8_t J1939_getCurrentECUAddress(void);
 
+/**
+ * @brief 	This function is used to set the current ECU address.
+ * @param	address - The current ECU address.
+ * @retval	None.
+ */
+void J1939_setCurrentECUAddress(uint8_t address);
+
 #endif /* __SAE_J1939_21_NETWORK_MANAGEMENT_LAYER_H */

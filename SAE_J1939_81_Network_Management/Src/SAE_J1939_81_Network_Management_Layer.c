@@ -32,3 +32,13 @@ uint8_t J1939_getCurrentECUAddress(void)
 {
 	return currentECU.ECUaddress;
 }
+
+/**
+ * @brief 	This function is used to set the current ECU address.
+ * @param	address - The current ECU address.
+ * @retval	None.
+ */
+void J1939_setCurrentECUAddress(uint8_t address)
+{
+	currentECU.ECUaddress = address;
+}

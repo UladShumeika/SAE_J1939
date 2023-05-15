@@ -42,6 +42,7 @@
 #define J1939_EDP_1								(1 << 25U)
 #define J1939_DP_0								(0U)
 #define J1939_DP_1								(1 << 24U)
+#define J1939_MAX_LENGTH_TP_MODE_PACKAGE		(7U)
 
 //---------------------------------------------------------------------------
 // Structure definitions
@@ -107,4 +108,23 @@ J1939_status J1939_readTP_dataTransfer(uint8_t* data)
 	}
 
 	return status;
+}
+
+/**
+ * @brief	This function used to fill connection management structure.
+ * @param 	data - A pointer to the sending data.
+ * @param 	dataSize - A size of the sending data.
+ * @param 	PGN - A PGN of the multipacket message.
+ * @param 	controlByte - A type of the control byte.
+ * @retval	None.
+ */
+void J1939_fillConnectionManagement(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte)
+{
+	uint8_t remainder = dataSize % J1939_MAX_LENGTH_TP_MODE_PACKAGE;
+
+	connectManagement.control_byte 						= controlByte;
+	connectManagement.message_size 						= dataSize;
+	connectManagement.total_number_of_packages 			= (remainder > 0U) ? ((dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE) + 1) : \
+																			 (dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE);
+	connectManagement.PGN_of_the_multipacket_message 	= PGN;
 }

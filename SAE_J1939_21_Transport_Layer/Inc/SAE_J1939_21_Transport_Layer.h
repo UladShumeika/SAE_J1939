@@ -104,4 +104,14 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data);
  */
 J1939_status J1939_readTP_dataTransfer(uint8_t* data);
 
+/**
+ * @brief	This function used to fill connection management structure.
+ * @param 	data - A pointer to the sending data.
+ * @param 	dataSize - A size of the sending data.
+ * @param 	PGN - A PGN of the multipacket message.
+ * @param 	controlByte - A type of the control byte.
+ * @retval	None.
+ */
+void J1939_fillConnectionManagement(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte);
+
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

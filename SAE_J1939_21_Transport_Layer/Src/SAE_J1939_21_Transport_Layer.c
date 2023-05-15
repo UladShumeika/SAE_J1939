@@ -34,15 +34,20 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
+#define J1939_CONNECTION_MANAGEMENT				(0xECU)
+#define J1939_DATA_TRANSFER						(0xEBU)
+
 #define J1939_BROADCAST_ADDRESS					(255U)
+#define J1939_MAX_LENGTH_TP_MODE_PACKAGE		(7U)
+
 #define J1939_PGN_PRIOTITY_POS					(26U)
 #define J1939_PDU_FORMAT_POS					(16U)
 #define J1939_PDU_SPECIFIC_POS					(8U)
+
 #define J1939_EDP_0								(0U)
 #define J1939_EDP_1								(1 << 25U)
 #define J1939_DP_0								(0U)
 #define J1939_DP_1								(1 << 24U)
-#define J1939_MAX_LENGTH_TP_MODE_PACKAGE		(7U)
 
 //---------------------------------------------------------------------------
 // Structure definitions
@@ -81,6 +86,43 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data)
 	}
 
 	return status;
+}
+
+/**
+ * @brief	This function is used to send transport protocol connection management messages.
+ * @param	destinationAddress - A destination address(255 for broadcast).
+ * @retval	None.
+ */
+void J1939_sendTP_connectionManagement(uint8_t destinationAddress)
+{
+	USH_CAN_txHeaderTypeDef txMessage = {0};
+	uint8_t currentECUAddress = J1939_getCurrentECUAddress();
+	uint8_t data[8] = {0};
+
+	txMessage.ExtId = (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | \
+					   (J1939_CONNECTION_MANAGEMENT << J1939_PDU_FORMAT_POS) | \
+					   (destinationAddress << J1939_PDU_SPECIFIC_POS) | \
+					   currentECUAddress);
+	txMessage.IDE 	= CAN_ID_EXT;
+	txMessage.RTR 	= CAN_RTR_DATA;
+	txMessage.DLC 	= 8U;
+
+	if(destinationAddress == J1939_BROADCAST_ADDRESS)
+	{
+		data[0] = connectManagement.control_byte;
+		data[1] = (uint8_t)connectManagement.message_size;
+		data[2] = (uint8_t)(connectManagement.message_size >> 8U);
+		data[3] = connectManagement.total_number_of_packages;
+		data[4] = 0xFFU;
+		data[5] = (uint8_t)connectManagement.PGN_of_the_multipacket_message;
+		data[6] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 8U);
+		data[7] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 16U);
+	} else
+	{
+		// peer-to-peer connection
+	}
+
+	CAN_addTxMessage(CAN_USED, &txMessage, data);
 }
 
 /**

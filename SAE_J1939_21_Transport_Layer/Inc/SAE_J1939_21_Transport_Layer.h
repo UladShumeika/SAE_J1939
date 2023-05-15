@@ -98,6 +98,13 @@ typedef struct
 J1939_status J1939_readTP_connectionManagement(uint8_t* data);
 
 /**
+ * @brief	This function is used to send transport protocol connection management messages.
+ * @param	destinationAddress - A destination address(255 for broadcast).
+ * @retval	None.
+ */
+void J1939_sendTP_connectionManagement(uint8_t destinationAddress);
+
+/**
  * @brief 	This function is used to read transport protocol data transfer messages.
  * @param	data - A pointer to the receiving data.
  * @retval	J1939 status.

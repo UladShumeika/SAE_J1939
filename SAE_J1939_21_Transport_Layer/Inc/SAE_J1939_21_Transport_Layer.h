@@ -61,7 +61,8 @@ typedef enum
 	J1939_STATUS_OK				= 0,		/* Status OK */
 	J1939_STATUS_ERROR,						/* Status Error */
 	J1939_STATUS_DATA_FINISHED,				/* Status data finished (for Transport Protocol) */
-	J1939_STATUS_DATA_CONTINUE				/* Status data continue (for Transport Protocol) */
+	J1939_STATUS_DATA_CONTINUE,				/* Status data continue (for Transport Protocol) */
+	J1939_STATUS_DATA_ABORT					/* Status data abort (for Transport Protocol) */
 } J1939_status;
 
 /**

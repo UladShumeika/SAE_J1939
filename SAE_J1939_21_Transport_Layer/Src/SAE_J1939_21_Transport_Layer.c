@@ -75,14 +75,24 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data)
 	connectManagement.PGN_of_the_multipacket_message 	= (((uint32_t)data[7] << 16U) | \
 														   ((uint32_t)data[6] << 8U) | data[5]);
 	// Check the control byte
-	if(connectManagement.control_byte == J1939_CONTROL_BYTE_TP_CM_BAM)
+	switch(connectManagement.control_byte)
 	{
-		// Memory allocation for the message (used from FreeRTOS)
-		dataTransfer.data = (uint8_t*)pvPortMalloc(connectManagement.message_size * sizeof(uint8_t));
-		dataTransfer.data_size = connectManagement.message_size;
+		case J1939_CONTROL_BYTE_TP_CM_BAM:
 
-		// Check memory allocation
-		if(dataTransfer.data == NULL) status = J1939_STATUS_ERROR;
+			// Memory allocation for the message (used from FreeRTOS)
+			dataTransfer.data = (uint8_t*)pvPortMalloc(connectManagement.message_size * sizeof(uint8_t));
+			dataTransfer.data_size = connectManagement.message_size;
+
+			// Check memory allocation
+			if(dataTransfer.data == NULL) status = J1939_STATUS_ERROR;
+			break;
+
+		case J1939_CONTROL_BYTE_TP_CM_Abort:
+			status = J1939_STATUS_DATA_ABORT;
+			break;
+
+		default:
+			break;
 	}
 
 	return status;

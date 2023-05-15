@@ -30,37 +30,15 @@
 //---------------------------------------------------------------------------
 
 /**
- * @brief PGN 0x00EC00 - Transport Protocol Connection Management.
- */
-typedef struct
-{
-	uint8_t control_byte;							/* Type of messages	*/
-	uint16_t message_size;							/* Total bytes of sending message - 9 to MAX_DT_SIZE */
-	uint8_t total_number_of_packages;				/* Number of packages to send a message */
-	uint32_t PGN_of_the_multipacket_message;		/* A PGN that activated the multi-packet transfer */
-} J1939_TP_CM;
-
-/**
- * @brief PGN 0x00EB00 - Transport Protocol Data Transfer.
- */
-typedef struct
-{
-	uint8_t sequence_number;		/* Sequence number - 1 to 255 */
-	uint8_t* data;					/* A pointer to data */
-	uint16_t data_size;				/* From 9 to MAX_DT_SIZE */
-	uint8_t flag_wait_message;		/* A flag of waiting message */
-} J1939_TP_DT;
-
-/**
  * @brief SAE J1939 control bytes enumeration.
  */
 typedef enum
 {
-	J1939_CONTROL_BYTE_TP_CM_RTS			= 16U,
-	J1939_CONTROL_BYTE_TP_CM_CTS			= 17U,
-	J1939_CONTROL_BYTE_TP_CM_EndOfMsgACK	= 19U,
-	J1939_CONTROL_BYTE_TP_CM_BAM			= 32U,
-	J1939_CONTROL_BYTE_TP_CM_Abort			= 255U
+	J1939_CONTROL_BYTE_TP_CM_RTS			= 16U,		/* Control byte for RTS (Request to Send) */
+	J1939_CONTROL_BYTE_TP_CM_CTS			= 17U,		/* Control byte for CTS (Clear to Send) */
+	J1939_CONTROL_BYTE_TP_CM_EndOfMsgACK	= 19U,		/* Control byte for EndOfMsgACK (End of Message Acknowledgment) */
+	J1939_CONTROL_BYTE_TP_CM_BAM			= 32U,		/* Control byte for BAM (Broadcast Announce Message) */
+	J1939_CONTROL_BYTE_TP_CM_Abort			= 255U		/* Control byte for Connection Abort */
 } J1939_controlBytes;
 
 /**
@@ -80,11 +58,33 @@ typedef enum
  */
 typedef enum
 {
-	J1939_STATUS_OK				= 0,
-	J1939_STATUS_ERROR,
-	J1939_STATUS_DATA_FINISHED,
-	J1939_STATUS_DATA_CONTINUE
+	J1939_STATUS_OK				= 0,		/* Status OK */
+	J1939_STATUS_ERROR,						/* Status Error */
+	J1939_STATUS_DATA_FINISHED,				/* Status data finished (for Transport Protocol) */
+	J1939_STATUS_DATA_CONTINUE				/* Status data continue (for Transport Protocol) */
 } J1939_status;
+
+/**
+ * @brief PGN 0x00EC00 - Transport Protocol Connection Management.
+ */
+typedef struct
+{
+	J1939_controlBytes control_byte;				/* Type of messages	*/
+	uint16_t message_size;							/* Total bytes of sending message - 9 to MAX_DT_SIZE */
+	uint8_t total_number_of_packages;				/* Number of packages to send a message */
+	uint32_t PGN_of_the_multipacket_message;		/* A PGN that activated the multi-packet transfer */
+} J1939_TP_CM;
+
+/**
+ * @brief PGN 0x00EB00 - Transport Protocol Data Transfer.
+ */
+typedef struct
+{
+	uint8_t sequence_number;		/* Sequence number - 1 to 255 */
+	uint8_t* data;					/* A pointer to data */
+	uint16_t data_size;				/* From 9 to MAX_DT_SIZE */
+	uint8_t flag_wait_message;		/* A flag of waiting message */
+} J1939_TP_DT;
 
 //---------------------------------------------------------------------------
 // External function prototypes

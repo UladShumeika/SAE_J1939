@@ -23,8 +23,18 @@
 #include "portable.h"
 
 //---------------------------------------------------------------------------
-// Includes
+// Configuration section
 //---------------------------------------------------------------------------
+#if defined(STM32F429xx)
+	#define CAN_USED							(CAN1)
+#elif defined(STM32F407xx)
+	#define CAN_USED							(CAN2)
+#endif
+
+//---------------------------------------------------------------------------
+// Defines
+//---------------------------------------------------------------------------
+#define J1939_BROADCAST_ADDRESS					(255U)
 #define J1939_PGN_PRIOTITY_POS					(26U)
 #define J1939_PDU_FORMAT_POS					(16U)
 #define J1939_PDU_SPECIFIC_POS					(8U)

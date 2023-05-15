@@ -209,16 +209,20 @@ J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress)
  * @param 	controlByte - A type of the control byte.
  * @retval	None.
  */
-void J1939_fillConnectionManagement(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte)
+void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte)
 {
 	uint8_t remainder = dataSize % J1939_MAX_LENGTH_TP_MODE_PACKAGE;
 
+	// Fill the connection management structure
 	connectManagement.control_byte 						= controlByte;
 	connectManagement.message_size 						= dataSize;
 	connectManagement.total_number_of_packages 			= (remainder > 0U) ? ((dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE) + 1) : \
 																			 (dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE);
 	connectManagement.PGN_of_the_multipacket_message 	= PGN;
 
+	// Fill the data transfer structure
+	dataTransfer.data = data;
+	dataTransfer.data_size = dataSize;
 }
 
 /**

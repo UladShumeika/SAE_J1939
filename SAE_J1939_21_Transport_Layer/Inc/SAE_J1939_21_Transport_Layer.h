@@ -127,7 +127,7 @@ J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress);
  * @param 	controlByte - A type of the control byte.
  * @retval	None.
  */
-void J1939_fillConnectionManagement(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte);
+void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte);
 
 /**
  * @brief	This function is used to clean TP structures.

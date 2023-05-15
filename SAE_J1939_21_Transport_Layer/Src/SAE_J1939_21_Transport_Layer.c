@@ -202,6 +202,39 @@ J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress)
 }
 
 /**
+ * @brief	This function is used to abort the current multi-packet session.
+ * @param	reason - A reason of aborting session.
+ * @param   destinationAddress - A destination address(255 for broadcast).
+ * @retval	None.
+ */
+void J1939_sendTP_connectionAbort(J1939_abortReasons reason, uint8_t destinationAddress)
+{
+	USH_CAN_txHeaderTypeDef txMessage = {0};
+	uint8_t currentECUAddress = J1939_getCurrentECUAddress();
+	uint8_t data[8] = {0};
+
+	// Build CAN ID FRAME, where 7 is the default priority
+	txMessage.ExtId		= (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | J1939_EDP_0 | J1939_DP_0 | \
+			      	  	  (J1939_CONNECTION_MANAGEMENT << J1939_PDU_FORMAT_POS) | \
+						  (destinationAddress << J1939_PDU_SPECIFIC_POS) | \
+						  currentECUAddress);
+	txMessage.IDE 		= CAN_ID_EXT;
+	txMessage.RTR 		= CAN_RTR_DATA;
+	txMessage.DLC 		= 8U;
+
+	data[0] = J1939_CONTROL_BYTE_TP_CM_Abort;
+	data[1] = reason;
+	data[2] = 0xFF;
+	data[3] = 0xFF;
+	data[4] = 0xFF;
+	data[5] = (uint8_t)connectManagement.PGN_of_the_multipacket_message;
+	data[6] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 8U);
+	data[7] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 16U);
+
+	CAN_addTxMessage(CAN_USED, &txMessage, data);
+}
+
+/**
  * @brief	This function used to fill TP structures.
  * @param 	data - A pointer to the sending data.
  * @param 	dataSize - A size of the sending data.

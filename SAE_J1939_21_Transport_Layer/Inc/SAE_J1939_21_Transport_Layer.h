@@ -30,6 +30,27 @@
 //---------------------------------------------------------------------------
 
 /**
+ * @brief SAE J1939 protocol states enumeration.
+ */
+typedef enum
+{
+	J1939_STATE_UNINIT,					/* CAN bus and J1939 protocol isn't initialized	*/
+	J1939_STATE_NORMAL,					/* For sending CAN message <= 8 bytes */
+	J1939_STATE_TP_RX_BROADCAST,		/* Receiving data in transport protocol mode broadcast */
+	J1939_STATE_TP_TX_BROADCAST,		/* Sending data in transport protocol mode broadcast */
+	J1939_STATE_TP_RX_PTP_CTS,			/* Receiving data in transport protocol mode peer-to-peer.
+	 	 	 	 	 	 	 	 	 	   CTS(Clear-to-send) waiting */
+	J1939_STATE_TP_RX_PTP_DATA,			/* Receiving data in transport protocol mode peer-to-peer */
+	J1939_STATE_TP_RX_PTP_EOM,			/* Receiving data in transport protocol mode peer-to-peer.
+	 	 	 	 	 	 	 	 	 	   Sending EOM (End-of-message) */
+	J1939_STATE_TP_TX_PTP_CTS,			/* Sending data in transport protocol mode peer-to-peer.
+		 	 	 	 	 	 	 	 	   Sending CTS(Clear-to-send) message */
+	J1939_STATE_TP_TX_PTP_DATA,			/* Sending data in transport protocol mode peer-to-peer */
+	J1939_STATE_TP_TX_PTP_EOM,			/* Sending data in transport protocol mode peer-to-peer.
+		 	 	 	 	 	 	 	 	   EOM (End-of-message) waiting */
+} J1939_states;
+
+/**
  * @brief SAE J1939 control bytes enumeration.
  */
 typedef enum

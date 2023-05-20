@@ -51,6 +51,25 @@ typedef enum
 } J1939_states;
 
 /**
+ * @brief J1939 status enumeration.
+ */
+typedef enum
+{
+	J1939_NO_STATUS,					/* Used to initialize a status variable */
+	J1939_ERROR_BUSY,					/* Status to alert TP session already open */
+	J1939_ERROR_MEMORY_ALLOCATION,		/* Status error memory allocation */
+	J1939_STATUS_GOT_BAM_MESSAGE,		/* Got BAM message */
+	J1939_STATUS_GOT_RTS_MESSAGE,		/* Got RTS message */
+	J1939_STATUS_GOT_CTS_MESSAGE,		/* Got CTS message */
+	J1939_STATUS_GOT_EOM_MESSAGE,		/* Got EOM message */
+	J1939_STATUS_GOT_ABORT_SESSION,		/* Got ABORT message */
+	J1939_STATUS_DATA_FINISHED,			/* Sending/receiving data finished */
+	J1939_STATUS_DATA_CONTINUE,			/* Sending/receiving data continue */
+	J1939_STATUS_SEND_CTS				/* Used in PTP mode to notify that the number of packets specified
+										   in the CTS message is completed and it's necessary to wait for the next */
+} J1939_status;
+
+/**
  * @brief SAE J1939 control bytes enumeration.
  */
 typedef enum
@@ -73,18 +92,6 @@ typedef enum
 	J1939_REASON_TIMEOUT 	= 3, 		/* A timeout occurred, and this is the connection abort
 										   to close the session. */
 } J1939_abortReasons;
-
-/**
- * @brief J1939 status enumeration.
- */
-typedef enum
-{
-	J1939_STATUS_OK				= 0,		/* Status OK */
-	J1939_STATUS_ERROR,						/* Status Error */
-	J1939_STATUS_DATA_FINISHED,				/* Status data finished (for Transport Protocol) */
-	J1939_STATUS_DATA_CONTINUE,				/* Status data continue (for Transport Protocol) */
-	J1939_STATUS_DATA_ABORT					/* Status data abort (for Transport Protocol) */
-} J1939_status;
 
 /**
  * @brief PGN 0x00EC00 - Transport Protocol Connection Management.

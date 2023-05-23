@@ -58,6 +58,7 @@ typedef enum
 	J1939_NO_STATUS,					/* Used to initialize a status variable */
 	J1939_ERROR_BUSY,					/* Status to alert TP session already open */
 	J1939_ERROR_MEMORY_ALLOCATION,		/* Status error memory allocation */
+	J1939_ERROR_TOO_BIG_MESSAGE,		/* Status too big message */
 	J1939_STATUS_GOT_BAM_MESSAGE,		/* Got BAM message */
 	J1939_STATUS_GOT_RTS_MESSAGE,		/* Got RTS message */
 	J1939_STATUS_GOT_CTS_MESSAGE,		/* Got CTS message */

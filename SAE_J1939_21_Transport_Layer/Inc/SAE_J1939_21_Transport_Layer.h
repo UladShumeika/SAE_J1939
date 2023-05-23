@@ -184,4 +184,10 @@ void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J193
  */
 void J1939_cleanTPstructures(void);
 
+/**
+ * @brief 	This function is used to get the pointer to received data.
+ * @retval	A pointer to received data.
+ */
+uint8_t* J1939_getReceivedMessage(void);
+
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

@@ -276,3 +276,12 @@ void J1939_cleanTPstructures(void)
 	dataTransfer.data_size								= 0U;
 	dataTransfer.sequence_number						= 0U;
 }
+
+/**
+ * @brief 	This function is used to get the pointer to received data.
+ * @retval	A pointer to received data.
+ */
+uint8_t* J1939_getReceivedMessage(void)
+{
+	return dataTransfer.data;
+}

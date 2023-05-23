@@ -66,7 +66,7 @@ typedef enum
 	J1939_STATUS_GOT_ABORT_SESSION,		/* Got ABORT message */
 	J1939_STATUS_DATA_FINISHED,			/* Sending/receiving data finished */
 	J1939_STATUS_DATA_CONTINUE,			/* Sending/receiving data continue */
-	J1939_STATUS_SEND_CTS				/* Used in PTP mode to notify that the number of packets specified
+	J1939_STATUS_CTS					/* Used in PTP mode to notify that the number of packets specified
 										   in the CTS message is completed and it's necessary to wait for the next */
 } J1939_status;
 

@@ -70,6 +70,18 @@ typedef enum
 } J1939_status;
 
 /**
+ * @brief J1939 transport protocol connection management message types.
+ */
+typedef enum
+{
+	J1939_TP_TYPE_BAM,      		/* Broadcast announce message */
+	J1939_TP_TYPE_RTS,      		/* Request to send message */
+	J1939_TP_TYPE_CTS,      		/* Clear to send message */
+	J1939_TP_TYPE_ABORT,    		/* Abort message type */
+	J1939_TP_TYPE_END_OF_MSG		/* End of message type */
+} J1939_TPcmTypes;
+
+/**
  * @brief SAE J1939 control bytes enumeration.
  */
 typedef enum

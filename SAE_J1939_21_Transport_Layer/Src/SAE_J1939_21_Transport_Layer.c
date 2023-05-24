@@ -195,14 +195,24 @@ void J1939_sendTP_connectionManagement(J1939_TPcmTypes type)
 J1939_status J1939_readTP_dataTransfer(uint8_t* data)
 {
 	J1939_status status = J1939_STATUS_DATA_CONTINUE;
-	uint8_t index = data[0] - 1;
 
 	// Read the multi-packet message
 	dataTransfer.sequence_number = data[0];
 
-	for(uint8_t i = 1; i <= 7; i++)
+	for(uint8_t i = 1U; i <= J1939_MAX_LENGTH_TP_MODE_PACKAGE; i++)
 	{
-		dataTransfer.data[(index * 7) + (i - 1)] = data[i];
+		if(dataTransfer.received_bytes < connectManagement.message_size)
+		{
+			dataTransfer.data[dataTransfer.received_bytes++] = data[i];
+		}
+	}
+
+	// Check the last package in CTS message
+	if(connectManagement.control_byte != J1939_CONTROL_BYTE_TP_CM_BAM)
+	{
+		--connectManagement.remaining_packages_from_CTS;
+
+		if(connectManagement.remaining_packages_from_CTS == 0U) status = J1939_STATUS_CTS;
 	}
 
 	// Check the last package

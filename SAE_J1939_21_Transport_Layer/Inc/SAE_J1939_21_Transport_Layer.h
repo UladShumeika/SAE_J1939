@@ -23,7 +23,15 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
-#define MAX_DT_SIZE					(1785U)
+#define J1939_MESSAGE_PACKET_FREQ				(50U) // from 50 to 200 ms
+#define J1939_MESSAGE_DATA_TIMEOUT				(750U)
+#define J1939_MESSAGE_CM_TIMEOUT				(1250U)
+
+#define J1939_BROADCAST_ADDRESS					(255U)
+#define J1939_USE_CURRENT_DA					(1U)
+
+#define J1939_CONNECTION_MANAGEMENT				(0xECU)
+#define J1939_DATA_TRANSFER						(0xEBU)
 
 //---------------------------------------------------------------------------
 // Structures and enumerations

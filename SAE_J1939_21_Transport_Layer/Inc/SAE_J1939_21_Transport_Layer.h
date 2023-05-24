@@ -176,10 +176,9 @@ J1939_status J1939_readTP_dataTransfer(uint8_t* data);
 
 /**
  * @brief	This function is used to send the data transfer packages.
- * @param 	destinationAddress - A destination address(255 for broadcast).
  * @return	J1939 status.
  */
-J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress);
+J1939_status J1939_sendTP_dataTransfer(void);
 
 /**
  * @brief	This function used to fill TP structures.

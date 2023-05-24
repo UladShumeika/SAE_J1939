@@ -216,10 +216,9 @@ J1939_status J1939_readTP_dataTransfer(uint8_t* data)
 
 /**
  * @brief	This function is used to send the data transfer packages.
- * @param 	destinationAddress - A destination address(255 for broadcast).
  * @return	J1939 status.
  */
-J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress)
+J1939_status J1939_sendTP_dataTransfer(void)
 {
 	J1939_status status = J1939_STATUS_DATA_CONTINUE;
 	USH_CAN_txHeaderTypeDef txMessage = {0};
@@ -229,19 +228,39 @@ J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress)
 	// Build CAN ID FRAME, where 7 is the default priority
 	txMessage.ExtId		= (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | J1939_EDP_0 | J1939_DP_0 | \
 		      	  	  	   (J1939_DATA_TRANSFER << J1939_PDU_FORMAT_POS) | \
-						   (destinationAddress << J1939_PDU_SPECIFIC_POS) | \
-						   currentECUAddress);
+						   (connectManagement.destination_address << J1939_PDU_SPECIFIC_POS) | currentECUAddress);
 	txMessage.IDE		= CAN_ID_EXT;
 	txMessage.RTR		= CAN_RTR_DATA;
 	txMessage.DLC		= 8U;
 
-	// Fill the data field of the sending message
-	data[0] = ++dataTransfer.sequence_number;
-
-	for(uint8_t i = 1; i <= J1939_MAX_LENGTH_TP_MODE_PACKAGE; i++)
+	// Fill in the data field of the sent message, taking into account the type of transfer
+	if(connectManagement.destination_address == J1939_BROADCAST_ADDRESS)
 	{
-		(dataTransfer.sent_bytes < dataTransfer.data_size) ? (data[i] = dataTransfer.data[dataTransfer.sent_bytes++]) : \
-																	    (data[i] = 0xFFU);
+		data[0] = ++dataTransfer.sequence_number;
+
+		for(uint8_t i = 1U; i <= J1939_MAX_LENGTH_TP_MODE_PACKAGE; i++)
+		{
+			(dataTransfer.sent_bytes < dataTransfer.data_size) ? (data[i] = dataTransfer.data[dataTransfer.sent_bytes++]) : \
+																		    (data[i] = 0xFFU);
+		}
+	} else
+	{
+		dataTransfer.sequence_number 	= connectManagement.next_package;
+		dataTransfer.sent_bytes 		= (connectManagement.next_package - 1U) * J1939_MAX_LENGTH_TP_MODE_PACKAGE;
+
+		data[0] = connectManagement.next_package++;
+
+		for(uint8_t i = 1U; i <= J1939_MAX_LENGTH_TP_MODE_PACKAGE; i++)
+		{
+			(dataTransfer.sent_bytes < connectManagement.message_size) ? (data[i] = dataTransfer.data[dataTransfer.sent_bytes++]) : \
+																		 (data[i] = 0xFFU);
+		}
+
+		if((--connectManagement.remaining_packages_from_CTS) == 0U)
+		{
+			status = J1939_STATUS_CTS;
+			connectManagement.CTS_available_message = 1U;
+		}
 	}
 
 	// Send the data package

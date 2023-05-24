@@ -66,29 +66,94 @@ static J1939_TP_DT dataTransfer 		= {0};
  */
 J1939_status J1939_readTP_connectionManagement(uint8_t* data)
 {
-	J1939_status status = J1939_STATUS_OK;
+	J1939_status status = J1939_NO_STATUS;
 
-	// Read the multi-packet message's parameters
-	connectManagement.control_byte 						= data[0];
-	connectManagement.message_size 						= ((uint16_t)data[2] << 8U) | data[1];
-	connectManagement.total_number_of_packages 			= data[3];
-	connectManagement.PGN_of_the_multipacket_message 	= (((uint32_t)data[7] << 16U) | \
-														   ((uint32_t)data[6] << 8U) | data[5]);
+	// Read only the control byte
+	connectManagement.control_byte = data[0];
+
 	// Check the control byte
 	switch(connectManagement.control_byte)
 	{
 		case J1939_CONTROL_BYTE_TP_CM_BAM:
+			status = J1939_STATUS_GOT_BAM_MESSAGE;
 
-			// Memory allocation for the message (used from FreeRTOS)
-			dataTransfer.data = (uint8_t*)pvPortMalloc(connectManagement.message_size * sizeof(uint8_t));
-			dataTransfer.data_size = connectManagement.message_size;
+			if(dataTransfer.memory_allocated == 0)
+			{
+				// Read the multi-packet message's parameters
+				connectManagement.message_size 						= ((uint16_t)data[2] << 8U) | data[1];
+				connectManagement.total_number_of_packages 			= data[3];
+				connectManagement.PGN_of_the_multipacket_message 	= (((uint32_t)data[7] << 16U) | \
+																	   ((uint32_t)data[6] << 8U) | data[5]);
 
-			// Check memory allocation
-			if(dataTransfer.data == NULL) status = J1939_STATUS_ERROR;
+				if(connectManagement.message_size > J1939_MAX_LENGTH_MESSAGE)
+				{
+					status = J1939_ERROR_TOO_BIG_MESSAGE;
+				} else
+				{
+					// Memory allocation for the message (used from FreeRTOS)
+					dataTransfer.data = (uint8_t*)pvPortMalloc(connectManagement.message_size * sizeof(uint8_t));
+
+					// Check memory allocation
+					(dataTransfer.data == NULL) ? (status = J1939_ERROR_MEMORY_ALLOCATION) : (dataTransfer.memory_allocated = 1);
+				}
+			} else
+			{
+				status = J1939_ERROR_BUSY;
+			}
 			break;
 
 		case J1939_CONTROL_BYTE_TP_CM_Abort:
-			status = J1939_STATUS_DATA_ABORT;
+			status = J1939_STATUS_GOT_ABORT_SESSION;
+			break;
+
+		case J1939_CONTROL_BYTE_TP_CM_CTS:
+
+			if(connectManagement.CTS_available_message == 1U)
+			{
+				connectManagement.remaining_packages_from_CTS = data[1];
+
+				if(connectManagement.remaining_packages_from_CTS > connectManagement.total_number_of_packages_in_CTS)
+				{
+					connectManagement.remaining_packages_from_CTS = connectManagement.total_number_of_packages_in_CTS;
+				}
+
+				connectManagement.CTS_available_message = 0U;
+
+				status = J1939_STATUS_GOT_CTS_MESSAGE;
+			}
+			break;
+
+		case J1939_CONTROL_BYTE_TP_CM_EndOfMsgACK:
+			status = J1939_STATUS_GOT_EOM_MESSAGE;
+			break;
+
+		case J1939_CONTROL_BYTE_TP_CM_RTS:
+			status = J1939_STATUS_GOT_RTS_MESSAGE;
+
+			if(dataTransfer.memory_allocated == 0)
+			{
+				// Read the multi-packet message's parameters
+				connectManagement.message_size 						= ((uint16_t)data[2] << 8U) | data[1];
+				connectManagement.total_number_of_packages 			= data[3];
+				connectManagement.total_number_of_packages_in_CTS	= data[4];
+				connectManagement.PGN_of_the_multipacket_message 	= (((uint32_t)data[7] << 16U) | \
+																	   ((uint32_t)data[6] << 8U) | data[5]);
+
+				if(connectManagement.message_size > J1939_MAX_LENGTH_MESSAGE)
+				{
+					status = J1939_ERROR_TOO_BIG_MESSAGE;
+				} else
+				{
+					// Memory allocation for the message (used from FreeRTOS)
+					dataTransfer.data = (uint8_t*)pvPortMalloc(connectManagement.message_size * sizeof(uint8_t));
+
+					// Check memory allocation
+					(dataTransfer.data == NULL) ? (status = J1939_ERROR_MEMORY_ALLOCATION) : (dataTransfer.memory_allocated = 1);
+				}
+			} else
+			{
+				status = J1939_ERROR_BUSY;
+			}
 			break;
 
 		default:

@@ -34,11 +34,9 @@
 //---------------------------------------------------------------------------
 // Defines
 //---------------------------------------------------------------------------
-#define J1939_CONNECTION_MANAGEMENT				(0xECU)
-#define J1939_DATA_TRANSFER						(0xEBU)
-
-#define J1939_BROADCAST_ADDRESS					(255U)
 #define J1939_MAX_LENGTH_TP_MODE_PACKAGE		(7U)
+#define J1939_MAX_NUMBER_PACKAGES_IN_CTS		(4U)
+#define J1939_STANDART_NUMBER_PACKAGES_IN_CTS	(2U)
 
 #define J1939_PGN_PRIOTITY_POS					(26U)
 #define J1939_PDU_FORMAT_POS					(16U)
@@ -49,11 +47,13 @@
 #define J1939_DP_0								(0U)
 #define J1939_DP_1								(1 << 24U)
 
+#define J1939_MAX_LENGTH_MESSAGE				(1785U)
+
 //---------------------------------------------------------------------------
 // Structure definitions
 //---------------------------------------------------------------------------
-static J1939_TP_CM connectManagement = {0};
-static J1939_TP_DT dataTransfer = {0};
+static J1939_TP_CM connectManagement 	= {0};
+static J1939_TP_DT dataTransfer 		= {0};
 
 //---------------------------------------------------------------------------
 // Library Functions

@@ -182,14 +182,6 @@ J1939_status J1939_readTP_dataTransfer(uint8_t* data);
 J1939_status J1939_sendTP_dataTransfer(uint8_t destinationAddress);
 
 /**
- * @brief	This function is used to abort the current multi-packet session.
- * @param	reason - A reason of aborting session.
- * @param   destinationAddress - A destination address(255 for broadcast).
- * @retval	None.
- */
-void J1939_sendTP_connectionAbort(J1939_abortReasons reason, uint8_t destinationAddress);
-
-/**
  * @brief	This function used to fill TP structures.
  * @param 	data - A pointer to the sending data.
  * @param 	dataSize - A size of the sending data.

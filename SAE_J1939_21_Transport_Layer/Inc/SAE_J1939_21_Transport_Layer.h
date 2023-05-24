@@ -107,11 +107,12 @@ typedef enum
  */
 typedef enum
 {
-	J1939_REASON_BUSY		= 1,		/* Already in one or more connection managed sessions and
-								   	   	   cannot support another */
-
-	J1939_REASON_TIMEOUT 	= 3, 		/* A timeout occurred, and this is the connection abort
-										   to close the session. */
+	J1939_REASON_BUSY						= 1,		/* Already in one or more connection managed sessions and
+								   	   	   	   	   	   	   cannot support another */
+	J1939_REASON_TIMEOUT 					= 3, 		/* A timeout occurred, and this is the connection abort
+										   	   	   	   	   to close the session. */
+	J1939_REASON_TOO_BIG_MESSAGE			= 9,		/* “Total Message Size” is greater than 1785 bytes */
+	J1939_REASON_MEMORY_ALLOCATION_ERROR	= 250U,		/* Memory allocation error for receiving message */
 } J1939_abortReasons;
 
 /**

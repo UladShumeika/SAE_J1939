@@ -314,19 +314,24 @@ void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J193
  * @brief	This function is used to clean TP structures.
  * @retval	None.
  */
-void J1939_cleanTPstructures(void)
+void J1939_clearTPstructures(void)
 {
 	// Clean the connection management structure
 	connectManagement.control_byte						= 0U;
 	connectManagement.message_size						= 0U;
 	connectManagement.total_number_of_packages			= 0U;
+	connectManagement.total_number_of_packages_in_CTS	= 0U;
+	connectManagement.next_package						= 0U;
+	connectManagement.PGN_of_the_multipacket_message	= 0U;
+	connectManagement.destination_address				= 0U;
 	connectManagement.PGN_of_the_multipacket_message	= 0U;
 
 	// Clean the data transfer structure
-	dataTransfer.sent_bytes								= 0U;
+	dataTransfer.sequence_number						= 0U;
 	dataTransfer.data									= 0U;
 	dataTransfer.data_size								= 0U;
-	dataTransfer.sequence_number						= 0U;
+	dataTransfer.sent_bytes								= 0U;
+	dataTransfer.memory_allocated						= 0U;
 }
 
 /**

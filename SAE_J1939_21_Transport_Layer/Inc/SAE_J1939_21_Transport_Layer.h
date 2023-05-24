@@ -203,7 +203,7 @@ void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J193
  * @brief	This function is used to clean TP structures.
  * @retval	None.
  */
-void J1939_cleanTPstructures(void);
+void J1939_clearTPstructures(void);
 
 /**
  * @brief 	This function is used to get the pointer to received data.

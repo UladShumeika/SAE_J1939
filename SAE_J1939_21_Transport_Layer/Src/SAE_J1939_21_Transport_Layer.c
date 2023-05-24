@@ -344,6 +344,25 @@ void J1939_freeAllocatedMemory(void)
 }
 
 /**
+ * @brief 	This function is used to set the abort reason.
+ * @param 	abortReason - The abort reason.
+ * @param	abortAddress - The address of the ECU to which the ABORT message must be sent.
+ * @retval	None.
+ */
+void J1939_setAbortReason(J1939_abortReasons abortReason, uint8_t abortAddress)
+{
+	connectManagement.abort_reason = abortReason;
+
+	if(abortAddress == J1939_USE_CURRENT_DA)
+	{
+		connectManagement.destination_address_abort = connectManagement.destination_address;
+	} else
+	{
+		connectManagement.destination_address_abort = abortAddress;
+	}
+}
+
+/**
  * @brief 	This function is used to get the pointer to received data.
  * @retval	A pointer to received data.
  */

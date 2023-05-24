@@ -145,6 +145,8 @@ typedef struct
 	uint8_t* data;					/* A pointer to data */
 	uint16_t data_size;				/* From 9 to MAX_DT_SIZE */
 	uint16_t sent_bytes;			/* A flag of waiting message */
+	uint16_t received_bytes;
+	uint8_t memory_allocated;		/* 1 - memory allocated, 0 - no memory allocated */
 } J1939_TP_DT;
 
 //---------------------------------------------------------------------------

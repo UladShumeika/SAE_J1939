@@ -124,6 +124,16 @@ typedef struct
 	uint16_t message_size;							/* Total bytes of sending message - 9 to MAX_DT_SIZE */
 	uint8_t total_number_of_packages;				/* Number of packages to send a message */
 	uint32_t PGN_of_the_multipacket_message;		/* A PGN that activated the multi-packet transfer */
+
+	uint8_t total_number_of_packages_in_CTS;		/* Max. number of packages in response to CTS. 0xFF - No limit. */
+	uint8_t remaining_packages_from_CTS;			/* It remains to accept packets from the last CTS. */
+	uint8_t next_package;							/* A next package. */
+	uint8_t CTS_available_message;					/* 1 allows to process CTS messages, 0 - doesn't */
+
+	uint8_t destination_address;					/* ECU address to send data to. 255 - broadcast */
+
+	J1939_abortReasons abort_reason;				/* Connection abort reason */
+	uint8_t destination_address_abort;				/* The address of the ECU to which the ABORT message must be sent */
 } J1939_TP_CM;
 
 /**

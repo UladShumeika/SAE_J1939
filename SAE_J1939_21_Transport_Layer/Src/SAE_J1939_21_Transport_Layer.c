@@ -335,6 +335,15 @@ void J1939_clearTPstructures(void)
 }
 
 /**
+ * @brief 	This function is used to free allocated memory.
+ * @retval	None.
+ */
+void J1939_freeAllocatedMemory(void)
+{
+	vPortFree(dataTransfer.data);
+}
+
+/**
  * @brief 	This function is used to get the pointer to received data.
  * @retval	A pointer to received data.
  */

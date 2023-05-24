@@ -162,10 +162,10 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data);
 
 /**
  * @brief	This function is used to send transport protocol connection management messages.
- * @param	destinationAddress - A destination address(255 for broadcast).
+ * @param	type - A type of the transport protocol connection management message.
  * @retval	None.
  */
-void J1939_sendTP_connectionManagement(uint8_t destinationAddress);
+void J1939_sendTP_connectionManagement(J1939_TPcmTypes type);
 
 /**
  * @brief 	This function is used to read transport protocol data transfer messages.

@@ -100,36 +100,88 @@ J1939_status J1939_readTP_connectionManagement(uint8_t* data)
 
 /**
  * @brief	This function is used to send transport protocol connection management messages.
- * @param	destinationAddress - A destination address(255 for broadcast).
+ * @param	type - A type of the transport protocol connection management message.
  * @retval	None.
  */
-void J1939_sendTP_connectionManagement(uint8_t destinationAddress)
+void J1939_sendTP_connectionManagement(J1939_TPcmTypes type)
 {
 	USH_CAN_txHeaderTypeDef txMessage = {0};
 	uint8_t currentECUAddress = J1939_getCurrentECUAddress();
 	uint8_t data[8] = {0};
 
-	txMessage.ExtId = (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | \
-					   (J1939_CONNECTION_MANAGEMENT << J1939_PDU_FORMAT_POS) | \
-					   (destinationAddress << J1939_PDU_SPECIFIC_POS) | \
-					   currentECUAddress);
+	// Fill in CAN ID
+	if(type == J1939_TP_TYPE_ABORT)
+	{
+		txMessage.ExtId = (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | \
+							(J1939_CONNECTION_MANAGEMENT << J1939_PDU_FORMAT_POS) | \
+							(connectManagement.destination_address_abort << J1939_PDU_SPECIFIC_POS) | currentECUAddress);
+	} else
+	{
+		txMessage.ExtId = (((uint32_t)7U << J1939_PGN_PRIOTITY_POS) | \
+							(J1939_CONNECTION_MANAGEMENT << J1939_PDU_FORMAT_POS) | \
+							(connectManagement.destination_address << J1939_PDU_SPECIFIC_POS) | currentECUAddress);
+	}
+
 	txMessage.IDE 	= CAN_ID_EXT;
 	txMessage.RTR 	= CAN_RTR_DATA;
 	txMessage.DLC 	= 8U;
 
-	if(destinationAddress == J1939_BROADCAST_ADDRESS)
+	// Fill in bytes that are the same for all messages
+	data[5] = (uint8_t)connectManagement.PGN_of_the_multipacket_message;
+	data[6] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 8U);
+	data[7] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 16U);
+
+	// Fill in the rest of the bytes according to the message type
+	switch(type)
 	{
-		data[0] = connectManagement.control_byte;
-		data[1] = (uint8_t)connectManagement.message_size;
-		data[2] = (uint8_t)(connectManagement.message_size >> 8U);
-		data[3] = connectManagement.total_number_of_packages;
-		data[4] = 0xFFU;
-		data[5] = (uint8_t)connectManagement.PGN_of_the_multipacket_message;
-		data[6] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 8U);
-		data[7] = (uint8_t)(connectManagement.PGN_of_the_multipacket_message >> 16U);
-	} else
-	{
-		// peer-to-peer connection
+		case J1939_TP_TYPE_BAM:
+			data[0] = J1939_CONTROL_BYTE_TP_CM_BAM;
+			data[1] = (uint8_t)connectManagement.message_size;
+			data[2] = (uint8_t)(connectManagement.message_size >> 8U);
+			data[3] = connectManagement.total_number_of_packages;
+			data[4] = 0xFFU;
+			break;
+
+		case J1939_TP_TYPE_RTS:
+			data[0] = J1939_CONTROL_BYTE_TP_CM_RTS;
+			data[1] = (uint8_t)connectManagement.message_size;
+			data[2] = (uint8_t)(connectManagement.message_size >> 8U);
+			data[3] = connectManagement.total_number_of_packages;
+			data[4] = connectManagement.total_number_of_packages_in_CTS;
+
+			connectManagement.CTS_available_message = 1U;
+			break;
+
+		case J1939_TP_TYPE_END_OF_MSG:
+			data[0] = J1939_CONTROL_BYTE_TP_CM_EndOfMsgACK;
+			data[1] = (uint8_t)connectManagement.message_size;
+			data[2] = (uint8_t)(connectManagement.message_size >> 8U);
+			data[3] = connectManagement.total_number_of_packages;
+			data[4] = 0xFFU;
+			break;
+
+		case J1939_TP_TYPE_CTS:
+			data[0] = J1939_CONTROL_BYTE_TP_CM_CTS;
+			data[1] = ((connectManagement.total_number_of_packages - connectManagement.next_package) >= J1939_STANDART_NUMBER_PACKAGES_IN_CTS) ? \
+					  (J1939_STANDART_NUMBER_PACKAGES_IN_CTS) : ((connectManagement.total_number_of_packages - connectManagement.next_package) + 1U);
+			data[2] = connectManagement.next_package;
+			data[3] = 0xFFU;
+			data[4] = 0xFFU;
+			break;
+
+		case J1939_TP_TYPE_ABORT:
+			data[0] = J1939_CONTROL_BYTE_TP_CM_Abort;
+			data[1] = (uint8_t)connectManagement.abort_reason;
+			data[2] = 0xFFU;
+			data[3] = 0xFFU;
+			data[4] = 0xFFU;
+
+			connectManagement.destination_address_abort 	= 0U;
+			connectManagement.abort_reason 					= 0U;
+			break;
+
+		default:
+			break;
 	}
 
 	CAN_addTxMessage(CAN_USED, &txMessage, data);

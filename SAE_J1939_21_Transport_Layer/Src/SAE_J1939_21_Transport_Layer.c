@@ -291,23 +291,29 @@ void J1939_sendTP_connectionAbort(J1939_abortReasons reason, uint8_t destination
  * @param 	data - A pointer to the sending data.
  * @param 	dataSize - A size of the sending data.
  * @param 	PGN - A PGN of the multipacket message.
- * @param 	controlByte - A type of the control byte.
+ * @param 	destinationAddress - ECU address to send data to.
  * @retval	None.
  */
-void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte)
+void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, uint8_t destinationAddress)
 {
 	uint8_t remainder = dataSize % J1939_MAX_LENGTH_TP_MODE_PACKAGE;
 
 	// Fill the connection management structure
-	connectManagement.control_byte 						= controlByte;
+	if(destinationAddress != J1939_BROADCAST_ADDRESS)
+	{
+		connectManagement.total_number_of_packages_in_CTS  	= J1939_MAX_NUMBER_PACKAGES_IN_CTS;
+		connectManagement.next_package						= 1U;
+	}
+
 	connectManagement.message_size 						= dataSize;
-	connectManagement.total_number_of_packages 			= (remainder > 0U) ? ((dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE) + 1) : \
-																			 (dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE);
-	connectManagement.PGN_of_the_multipacket_message 	= PGN;
+	connectManagement.total_number_of_packages			= (remainder > 0U) ? ((dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE) + 1) : \
+																			  (dataSize / J1939_MAX_LENGTH_TP_MODE_PACKAGE);
+	connectManagement.PGN_of_the_multipacket_message	= PGN;
+	connectManagement.destination_address				= destinationAddress;
 
 	// Fill the data transfer structure
-	dataTransfer.data = data;
-	dataTransfer.data_size = dataSize;
+	dataTransfer.data 									= data;
+	dataTransfer.data_size 								= dataSize;
 }
 
 /**

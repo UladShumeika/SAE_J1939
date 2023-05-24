@@ -194,10 +194,10 @@ void J1939_sendTP_connectionAbort(J1939_abortReasons reason, uint8_t destination
  * @param 	data - A pointer to the sending data.
  * @param 	dataSize - A size of the sending data.
  * @param 	PGN - A PGN of the multipacket message.
- * @param 	controlByte - A type of the control byte.
+ * @param 	destinationAddress - ECU address to send data to.
  * @retval	None.
  */
-void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, J1939_controlBytes controlByte);
+void J1939_fillTPstructures(uint8_t* data, uint16_t dataSize, uint32_t PGN, uint8_t destinationAddress);
 
 /**
  * @brief	This function is used to clean TP structures.

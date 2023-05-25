@@ -216,4 +216,10 @@ void J1939_setAbortReason(J1939_abortReasons abortReason, uint8_t abortAddress);
  */
 uint8_t* J1939_getReceivedMessage(void);
 
+/**
+ * @brief 	This function is used to safe the destination address in the connection management structure.
+ * @retval	destinationAddress - The DA from the received messages.
+ */
+void J1939_setDestinationAddress(uint8_t destinationAddress);
+
 #endif /* __SAE_J1939_21_TRANSPORT_LAYER_H */

@@ -437,3 +437,12 @@ uint8_t* J1939_getReceivedMessage(void)
 {
 	return dataTransfer.data;
 }
+
+/**
+ * @brief 	This function is used to safe the destination address in the connection management structure.
+ * @retval	destinationAddress - The DA from the received messages.
+ */
+void J1939_setDestinationAddress(uint8_t destinationAddress)
+{
+	connectManagement.destination_address = destinationAddress;
+}

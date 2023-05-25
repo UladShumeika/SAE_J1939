@@ -232,6 +232,8 @@ void J1939_sendTP_connectionManagement(J1939_TPcmTypes type)
 			data[2] = connectManagement.next_package;
 			data[3] = 0xFFU;
 			data[4] = 0xFFU;
+
+			connectManagement.remaining_packages_from_CTS = J1939_STANDART_NUMBER_PACKAGES_IN_CTS;
 			break;
 
 		case J1939_TP_TYPE_ABORT:

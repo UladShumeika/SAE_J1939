@@ -15,6 +15,7 @@
 //---------------------------------------------------------------------------
 #include "SAE_J1939_21_Transport_Layer.h"
 #include "SAE_J1939_81_Network_Management_Layer.h"
+#include "ush_stm32f4xx_can.h"
 
 // for NULL and pvPortMalloc function
 #include "projdefs.h"
